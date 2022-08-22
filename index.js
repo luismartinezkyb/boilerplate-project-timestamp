@@ -20,8 +20,65 @@ app.get("/", function (req, res) {
 
 
 // your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+
+app.get('/api', (req, res)=>{
+  var today = new Date()
+  let check = Date.parse(today);
+  res.json({
+      "unix": check,
+      "utc": today.toUTCString()
+    })
+})
+// your first API endpoint... 
+app.get('/api/:date', (req, res)=>{
+  const {date} = req.params;
+  
+  let checkDate = Date.parse(date);
+  console.log(checkDate)
+  if(checkDate){
+    let newDate = new Date(checkDate * 1)
+    res.json({
+      "unix": checkDate,
+      "utc": newDate.toUTCString()
+    })
+  }
+  else if(date.length===13 || date.length===10 || date.length===16 || date.length===19 ){
+    let newDate2;
+    let number;
+    switch(date.length){
+      case 10:
+        console.log("case10");
+        newDate2 = new Date(date * 1000)
+        number = Number(date)*1000;
+        break;
+      case 13:
+        console.log("case13");
+        newDate2 = new Date(date * 1)
+        number = Number(date)*1;
+        break;
+      case 16:
+        console.log("case16");
+        newDate2 = new Date(date / 1000);
+        number = Number(date)/1000;
+        break;
+      case 19:
+        console.log("case19");
+        newDate2 = new Date(date / 1000000)
+        number = Number(date)/1000000;
+        break;
+      default:
+        
+        break;
+    }
+    res.json({
+      "unix": number,
+      "utc": newDate2.toUTCString()
+    })
+  }
+  else{
+    res.json({"error": "Invalid Date"})
+  }
+  
 });
 
 
